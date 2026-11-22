@@ -1,0 +1,25 @@
+package com.example.axs_player.ui.theme
+
+import androidx.compose.ui.graphics.Color
+
+val BackgroundGray = Color(0xFF565656)
+val ActiveGray = Color(0xFFAFAFAF)
+val TextBlack = Color(0xFF000000)
+val TextWhite = Color(0xFFFFFFFF)
+val TextMuted = TextBlack.copy(alpha = 0.60f)
+val TextPlaceholder = TextBlack.copy(alpha = 0.52f)
+val PageBackground = Color(0xFF929292)
+val TrackActiveBackground = Color(0xFFABC6CB)
+val CoverShadow = TextBlack.copy(alpha = 0.60f)
+val ProgressAccent = Color(0xFF0033FF)
+val ProgressFillTop = Color(0xFF0084FF)
+val ProgressFillMiddle = Color(0xFF0070D8)
+val ProgressFillBottom = Color(0xFF004B92).copy(alpha = 0.5f)
+val ProgressInnerShadow = TextBlack.copy(alpha = 0.40f)
+val CoverOverlay = TextBlack.copy(alpha = 0.30f)
+val StorageOther = Color(0xFF19E9FF)
+val StorageData = Color(0xFF0084FF)
+val StorageCache = Color(0xFF7B7B7B)
+val StorageFree = Color(0xFF424242)
+val ToggleOff = Color(0xFF424242)
+val ToggleOn = Color(0xFFFF9C39)
