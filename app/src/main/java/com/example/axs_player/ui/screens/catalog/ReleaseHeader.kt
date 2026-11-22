@@ -5,9 +5,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.axs_player.ui.theme.OldStandardTT
@@ -18,10 +20,10 @@ internal val RELEASE_META_FONT_SIZE = 16.sp
 private val RELEASE_TITLE_WIDTH = 235.dp
 
 @Composable
-internal fun ReleaseMeta(text: String) {
+internal fun ReleaseMeta(text: String, color: Color = TextMuted) {
     Text(
         text = text,
-        color = TextMuted,
+        color = color,
         fontSize = RELEASE_META_FONT_SIZE,
         fontFamily = OldStandardTT,
         fontWeight = FontWeight.Normal
@@ -29,10 +31,10 @@ internal fun ReleaseMeta(text: String) {
 }
 
 @Composable
-internal fun ReleaseTitle(title: String) {
+internal fun ReleaseTitle(title: String, color: Color = TextBlack) {
     Text(
         text = "«$title»",
-        color = TextBlack,
+        color = color,
         fontSize = 20.sp,
         fontFamily = OldStandardTT,
         fontStyle = FontStyle.Italic,

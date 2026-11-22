@@ -158,6 +158,13 @@ class AlbumEditViewModel(
         }
     }
 
+    fun setTextColorMode(mode: String) {
+        viewModelScope.launch {
+            dao.updateAlbumTextColorMode(albumId, mode)
+            containerSync?.saveBackAlbum(albumId)
+        }
+    }
+
     fun addMedia(source: Uri) {
         viewModelScope.launch(Dispatchers.IO) {
             images.saveAlbumMedia(albumId, source)?.let { _media.value = images.albumMedia(albumId) }

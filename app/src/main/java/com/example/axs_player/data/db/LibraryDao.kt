@@ -116,6 +116,7 @@ interface LibraryDao {
     @Query(
         """
         SELECT al.id, al.title, al.year, al.coverFileName,
+            al.textColorMode,
             $ALBUM_ARTISTS AS artists,
             al.isContainerOwned, al.isContainerOnly, al.containerFileName
         FROM albums al
@@ -130,6 +131,7 @@ interface LibraryDao {
             al.backgroundTextureFileName, al.backgroundTextureScale, al.backgroundTextureFit,
             al.backgroundTextureOffsetX, al.backgroundTextureOffsetY, al.backgroundTextureBlendMode,
             al.backgroundTextureKeyColor, al.backgroundTextureTolerance, al.backgroundTextureOpacity,
+            al.textColorMode,
             $ALBUM_ARTISTS AS artists,
             al.containerFileName, al.isContainerOwned, al.isContainerOnly, al.containerSyncState,
             al.containerManifestJson
@@ -216,6 +218,7 @@ interface LibraryDao {
     @Query(
         """
         SELECT al.id, al.title, al.year, al.coverFileName,
+            al.textColorMode,
             $ALBUM_ARTISTS AS artists,
             al.isContainerOwned, al.isContainerOnly, al.containerFileName
         FROM album_artists link
@@ -253,7 +256,8 @@ interface LibraryDao {
     @Query(
         """
         SELECT al.id, al.title, al.year, al.coverFileName, NULL AS artists,
-            al.isContainerOwned, al.isContainerOnly, al.containerFileName
+            al.isContainerOwned, al.isContainerOnly, al.containerFileName,
+            al.textColorMode
         FROM album_tracks atr
         JOIN albums al ON al.id = atr.albumId
         WHERE atr.trackId = :trackId
@@ -357,6 +361,9 @@ interface LibraryDao {
 
     @Query("UPDATE albums SET description = :description WHERE id = :albumId")
     suspend fun updateAlbumDescription(albumId: String, description: String?)
+
+    @Query("UPDATE albums SET textColorMode = :mode WHERE id = :albumId")
+    suspend fun updateAlbumTextColorMode(albumId: String, mode: String)
 
     @Query("UPDATE albums SET backgroundTextureFileName = :fileName, backgroundTextureScale = :scale, backgroundTextureFit = :fit, backgroundTextureOffsetX = :offsetX, backgroundTextureOffsetY = :offsetY, backgroundTextureBlendMode = :blendMode, backgroundTextureKeyColor = :keyColor, backgroundTextureTolerance = :tolerance, backgroundTextureOpacity = :opacity WHERE id = :albumId")
     suspend fun updateAlbumBackgroundTexture(albumId: String, fileName: String?, scale: Float, fit: String, offsetX: Float, offsetY: Float, blendMode: String, keyColor: Int, tolerance: Float, opacity: Float)

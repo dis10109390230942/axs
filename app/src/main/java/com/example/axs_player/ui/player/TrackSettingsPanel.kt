@@ -24,8 +24,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.axs_player.playback.PlayableTrack
-import com.example.axs_player.ui.theme.TextBlack
 import kotlin.math.roundToInt
+import com.example.axs_player.ui.components.contrastColor
 
 private val SWIPE_THRESHOLD = 48.dp
 
@@ -41,6 +41,9 @@ fun TrackSettingsPanel(
 ) {
     val currentOnClose by rememberUpdatedState(onClose)
     BackHandler(onBack = currentOnClose)
+
+    val textColor = backgroundColor.contrastColor()
+    val mutedColor = textColor.copy(alpha = 0.65f)
 
     Column(
         modifier = modifier
@@ -62,10 +65,10 @@ fun TrackSettingsPanel(
             }
             .padding(start = 10.dp, end = 10.dp, top = 100.dp)
     ) {
-        Text("track settings", color = TextBlack, fontSize = 16.sp, fontWeight = FontWeight.Medium)
+        Text("track settings", color = textColor, fontSize = 16.sp, fontWeight = FontWeight.Medium)
         Text(
             text = track.displayTitle,
-            color = TextBlack,
+            color = textColor,
             fontSize = 14.sp,
             modifier = Modifier.padding(top = 24.dp)
         )
@@ -73,8 +76,8 @@ fun TrackSettingsPanel(
             modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text("track volume", color = TextBlack, fontSize = 14.sp, fontWeight = FontWeight.Medium)
-            Text("${(volume * 100).roundToInt()}%", color = TextBlack, fontSize = 14.sp)
+            Text("track volume", color = textColor, fontSize = 14.sp, fontWeight = FontWeight.Medium)
+            Text("${(volume * 100).roundToInt()}%", color = textColor, fontSize = 14.sp)
         }
         Slider(
             value = volume.coerceIn(0f, 2f),
@@ -82,6 +85,6 @@ fun TrackSettingsPanel(
             valueRange = 0f..2f,
             modifier = Modifier.fillMaxWidth()
         )
-        Text("0%–200%", color = TextBlack.copy(alpha = 0.65f), fontSize = 12.sp)
+        Text("0%–200%", color = mutedColor, fontSize = 12.sp)
     }
 }

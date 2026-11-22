@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.axs_player.ui.theme.TextBlack
 import com.example.axs_player.ui.theme.TextMuted
+import com.example.axs_player.ui.components.contrastColor
 
 private val SWIPE_CLOSE_THRESHOLD = 48.dp
 
@@ -32,6 +33,8 @@ private val SWIPE_CLOSE_THRESHOLD = 48.dp
 fun LyricsPanel(text: String?, backgroundColor: Color, onClose: (PanelDirection) -> Unit, modifier: Modifier = Modifier) {
     val currentOnClose by rememberUpdatedState(onClose)
     BackHandler(onBack = { onClose(PanelDirection.LEFT) })
+    val textColor = backgroundColor.contrastColor()
+    val mutedColor = textColor.copy(alpha = 0.6f)
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -48,10 +51,10 @@ fun LyricsPanel(text: String?, backgroundColor: Color, onClose: (PanelDirection)
             .padding(start = 10.dp, top = 100.dp, end = 10.dp, bottom = 100.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        Text("track lyric", color = TextBlack, fontSize = 16.sp, fontWeight = FontWeight.Medium, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+        Text("track lyric", color = textColor, fontSize = 16.sp, fontWeight = FontWeight.Medium, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
         Text(
             text = text?.takeIf { it.isNotBlank() } ?: "–",
-            color = if (text.isNullOrBlank()) TextMuted else TextBlack,
+            color = if (text.isNullOrBlank()) mutedColor else textColor,
             fontSize = 16.sp,
             fontWeight = FontWeight.Medium,
             textAlign = TextAlign.Center,

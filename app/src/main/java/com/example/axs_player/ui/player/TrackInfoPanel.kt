@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.axs_player.ui.theme.TextBlack
+import com.example.axs_player.ui.components.contrastColor
 
 private val SWIPE_CLOSE_THRESHOLD = 48.dp
 
@@ -45,6 +46,7 @@ fun TrackInfoPanel(
 
     BackHandler(onBack = { onClose(PanelDirection.DOWN) })
 
+    val textColor = backgroundColor.contrastColor()
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -58,7 +60,7 @@ fun TrackInfoPanel(
     ) {
         Text(
             text = "track info",
-            color = TextBlack,
+            color = textColor,
             fontSize = 16.sp,
             fontWeight = FontWeight.Medium,
             modifier = Modifier.padding(start = 10.dp, end = 10.dp, bottom = 10.dp)

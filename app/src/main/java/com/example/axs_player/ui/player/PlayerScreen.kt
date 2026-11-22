@@ -41,6 +41,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import com.example.axs_player.ui.components.ProgressBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -82,9 +83,9 @@ import com.example.axs_player.playback.RepeatMode
 import com.example.axs_player.ui.components.CoverImage
 import com.example.axs_player.ui.components.AllowAutoRotateWhileVisible
 import com.example.axs_player.ui.components.rememberCoverColors
-import com.example.axs_player.ui.components.ProgressBar
 import com.example.axs_player.ui.theme.BackgroundGray
 import com.example.axs_player.ui.theme.TextBlack
+import com.example.axs_player.ui.theme.TextWhite
 
 private val CONTROL_HEIGHT = 40.dp
 private val PLAYBACK_CONTROLS_HEIGHT = 56.dp
@@ -145,6 +146,7 @@ fun PlayerScreen(
     }
     val coverColors = rememberCoverColors(track?.artworkUri)
     val backgroundColor = coverColors.background
+    val textColorMode = trackInfo.textColorMode
     if (track == null) return
     if (track.hasVideo && isClipMode) AllowAutoRotateWhileVisible()
 
@@ -159,6 +161,7 @@ fun PlayerScreen(
             state = state,
             progress = progress,
             backgroundColor = backgroundColor,
+            textColorMode = textColorMode,
             textureUri = trackInfo.albumTextureUri,
             textureScale = trackInfo.albumTextureScale,
             textureOffsetX = trackInfo.albumTextureOffsetX,
@@ -261,6 +264,7 @@ private fun PlayerContent(
     state: PlaybackState,
     progress: PlaybackProgress,
     backgroundColor: Color,
+    textColorMode: String,
     textureUri: Uri?,
     textureScale: Float,
     textureOffsetX: Float,
@@ -320,6 +324,8 @@ private fun PlayerContent(
             progress = progress,
             player = player,
             highlightColor = highlightColor,
+            backgroundColor = backgroundColor,
+            textColorMode = textColorMode,
             isClipMode = isClipMode,
             onClipModeChange = onClipModeChange,
             viewModel = viewModel,
@@ -389,6 +395,8 @@ private fun PlayerPage(
     progress: PlaybackProgress,
     player: Player,
     highlightColor: Color,
+    backgroundColor: Color,
+    textColorMode: String,
     isClipMode: Boolean,
     onClipModeChange: (Boolean) -> Unit,
     viewModel: PlayerViewModel,
@@ -415,17 +423,18 @@ private fun PlayerPage(
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterVertically)
         ) {
-            TrackTitle(track = track)
+            TrackTitle(track = track, textColorMode = textColorMode)
             Cover(track = track, player = player, isClipMode = isClipMode)
             MediaModeSwitch(
                 isVisible = track.hasVideo,
                 isClipMode = isClipMode,
                 activeColor = highlightColor,
+                textColorMode = textColorMode,
                 onClipModeChange = onClipModeChange
             )
         }
         Column(modifier = Modifier.fillMaxWidth()) {
-            SeekBar(progress = progress, onSeek = viewModel::seekTo)
+            SeekBar(progress = progress, onSeek = viewModel::seekTo, textColorMode = textColorMode)
             Spacer(modifier = Modifier.height(65.dp))
             PlaybackControls(
                 isPlaying = state.isPlaying,
@@ -437,7 +446,8 @@ private fun PlayerPage(
                 onPrevious = viewModel::skipToPrevious,
                 onPlayPause = viewModel::togglePlayPause,
                 onNext = viewModel::skipToNext,
-                onRepeat = viewModel::cycleRepeatMode
+                onRepeat = viewModel::cycleRepeatMode,
+                textColorMode = textColorMode
             )
         }
     }
@@ -454,7 +464,8 @@ private fun PlaybackControls(
     onPrevious: () -> Unit,
     onPlayPause: () -> Unit,
     onNext: () -> Unit,
-    onRepeat: () -> Unit
+    onRepeat: () -> Unit,
+    textColorMode: String
 ) {
     Row(modifier = Modifier.fillMaxWidth()) {
         IconButton(
@@ -464,7 +475,8 @@ private fun PlaybackControls(
             onClick = onShuffle,
             modifier = Modifier.weight(1f),
             alignment = Alignment.CenterStart,
-            height = PLAYBACK_CONTROLS_HEIGHT
+            height = PLAYBACK_CONTROLS_HEIGHT,
+            textColorMode = textColorMode
         )
         IconButton(
             iconRes = R.drawable.ic_skip_previous,
@@ -474,7 +486,8 @@ private fun PlaybackControls(
             modifier = Modifier.weight(1f),
             alignment = Alignment.Center,
             height = PLAYBACK_CONTROLS_HEIGHT,
-            isDimmed = !hasPrevious
+            isDimmed = !hasPrevious,
+            textColorMode = textColorMode
         )
         IconButton(
             iconRes = if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play,
@@ -483,7 +496,8 @@ private fun PlaybackControls(
             onClick = onPlayPause,
             modifier = Modifier.weight(1f),
             alignment = Alignment.Center,
-            height = PLAYBACK_CONTROLS_HEIGHT
+            height = PLAYBACK_CONTROLS_HEIGHT,
+            textColorMode = textColorMode
         )
         IconButton(
             iconRes = R.drawable.ic_skip_next,
@@ -493,7 +507,8 @@ private fun PlaybackControls(
             modifier = Modifier.weight(1f),
             alignment = Alignment.Center,
             height = PLAYBACK_CONTROLS_HEIGHT,
-            isDimmed = !hasNext
+            isDimmed = !hasNext,
+            textColorMode = textColorMode
         )
         IconButton(
             iconRes = when (repeatMode) {
@@ -510,19 +525,21 @@ private fun PlaybackControls(
             onClick = onRepeat,
             modifier = Modifier.weight(1f),
             alignment = Alignment.CenterEnd,
-            height = PLAYBACK_CONTROLS_HEIGHT
+            height = PLAYBACK_CONTROLS_HEIGHT,
+            textColorMode = textColorMode
         )
     }
 }
 
 @Composable
-private fun TrackTitle(track: PlayableTrack) {
+private fun TrackTitle(track: PlayableTrack, textColorMode: String) {
+    val textColor = if (textColorMode == "white") TextWhite else TextBlack
     Text(
         text = buildString {
             track.artists?.takeIf { it.isNotBlank() }?.let { append("${it.lowercase()} - ") }
             append("«${track.displayTitle.lowercase()}»")
         },
-        color = TextBlack,
+        color = textColor,
         fontSize = 14.sp,
         fontWeight = FontWeight.Medium,
         fontStyle = FontStyle.Italic,
@@ -536,8 +553,10 @@ private fun MediaModeSwitch(
     isVisible: Boolean,
     isClipMode: Boolean,
     activeColor: Color,
+    textColorMode: String,
     onClipModeChange: (Boolean) -> Unit
 ) {
+    val textColor = if (textColorMode == "white") TextWhite else TextBlack
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -545,10 +564,11 @@ private fun MediaModeSwitch(
     ) {
         if (isVisible) {
             Row(modifier = Modifier.fillMaxWidth()) {
-                MediaModeButton(
+MediaModeButton(
                     text = "track",
                     isSelected = !isClipMode,
                     activeColor = activeColor,
+                    textColor = textColor,
                     onClick = { onClipModeChange(false) },
                     modifier = Modifier.weight(1f)
                 )
@@ -556,6 +576,7 @@ private fun MediaModeSwitch(
                     text = "clip",
                     isSelected = isClipMode,
                     activeColor = activeColor,
+                    textColor = textColor,
                     onClick = { onClipModeChange(true) },
                     modifier = Modifier.weight(1f)
                 )
@@ -569,6 +590,7 @@ private fun MediaModeButton(
     text: String,
     isSelected: Boolean,
     activeColor: Color,
+    textColor: Color,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -583,7 +605,7 @@ private fun MediaModeButton(
             ),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = text, color = TextBlack, fontSize = 14.sp, fontWeight = FontWeight.Medium)
+        Text(text = text, color = textColor, fontSize = 14.sp, fontWeight = FontWeight.Medium)
     }
 }
 
@@ -629,7 +651,7 @@ private fun Cover(track: PlayableTrack, player: Player, isClipMode: Boolean) {
 }
 
 @Composable
-private fun SeekBar(progress: PlaybackProgress, onSeek: (Float) -> Unit) {
+private fun SeekBar(progress: PlaybackProgress, onSeek: (Float) -> Unit, textColorMode: String) {
     val currentOnSeek by rememberUpdatedState(onSeek)
     var dragFraction by remember { mutableStateOf<Float?>(null) }
     val shownPositionMs = dragFraction?.let { (it * progress.durationMs).toLong() } ?: progress.positionMs
@@ -638,30 +660,32 @@ private fun SeekBar(progress: PlaybackProgress, onSeek: (Float) -> Unit) {
         SeekTrack(
             progress = dragFraction ?: progress.fraction,
             onSeek = { currentOnSeek(it) },
-            onDrag = { dragFraction = it }
+            onDrag = { dragFraction = it },
+            textColorMode = textColorMode
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Timing(timeMs = shownPositionMs)
-            Timing(timeMs = progress.durationMs)
+            Timing(timeMs = shownPositionMs, textColorMode = textColorMode)
+            Timing(timeMs = progress.durationMs, textColorMode = textColorMode)
         }
     }
 }
 
 @Composable
-private fun Timing(timeMs: Long) {
+private fun Timing(timeMs: Long, textColorMode: String) {
+    val textColor = if (textColorMode == "white") TextWhite else TextBlack
     Text(
         text = formatPlaybackTime(timeMs),
-        color = TextBlack,
+        color = textColor,
         fontSize = 10.sp,
         fontWeight = FontWeight.Medium
     )
 }
 
 @Composable
-private fun SeekTrack(progress: Float, onSeek: (Float) -> Unit, onDrag: (Float?) -> Unit) {
+private fun SeekTrack(progress: Float, onSeek: (Float) -> Unit, onDrag: (Float?) -> Unit, textColorMode: String) {
     val currentOnSeek by rememberUpdatedState(onSeek)
     val currentOnDrag by rememberUpdatedState(onDrag)
     var dragFraction by remember { mutableStateOf<Float?>(null) }
@@ -705,8 +729,10 @@ private fun IconButton(
     alignment: Alignment = Alignment.Center,
     iconSize: Dp? = null,
     height: Dp = CONTROL_HEIGHT,
-    isDimmed: Boolean = false
+    isDimmed: Boolean = false,
+    textColorMode: String = "black"
 ) {
+    val tintColor = if (textColorMode == "white") TextWhite else TextBlack
     Box(
         modifier = modifier
             .height(height)
@@ -720,7 +746,7 @@ private fun IconButton(
         Icon(
             painter = painterResource(iconRes),
             contentDescription = description,
-            tint = if (isDimmed) TextBlack.copy(alpha = DIMMED_ICON_ALPHA) else TextBlack,
+            tint = if (isDimmed) tintColor.copy(alpha = DIMMED_ICON_ALPHA) else tintColor,
             modifier = iconSize?.let { Modifier.size(it) } ?: Modifier
         )
     }

@@ -61,6 +61,7 @@ data class AxsAlbum(
     val backgroundTextureKeyColor: Int = -1,
     val backgroundTextureTolerance: Float = 32f,
     val backgroundTextureOpacity: Float = 1f,
+    val textColorMode: String = "black",
     val tracks: List<AxsTrack>,
     val rawJson: JSONObject? = null
 )
@@ -115,6 +116,7 @@ data class AxsAlbumWriteData(
     val backgroundTextureKeyColor: Int = -1,
     val backgroundTextureTolerance: Float = 32f,
     val backgroundTextureOpacity: Float = 1f,
+    val textColorMode: String = "black",
     val tracks: List<AxsTrackWriteData>,
     val preservedRawJson: JSONObject? = null
 )
@@ -225,6 +227,7 @@ object AxsContainer {
         val textureKeyColor = albumJson.optInt("background_texture_key_color", -1)
         val textureTolerance = albumJson.optDouble("background_texture_tolerance", 32.0).toFloat()
         val textureOpacity = if (albumJson.isNull("background_texture_opacity")) 1f else albumJson.optDouble("background_texture_opacity", 1.0).toFloat()
+        val textColorMode = cleanString(albumJson.optString("text_color_mode")) ?: "black"
 
         AxsAlbum(
             id = cleanString(albumJson.optString("id")),
@@ -247,6 +250,7 @@ object AxsContainer {
             backgroundTextureKeyColor = textureKeyColor,
             backgroundTextureTolerance = textureTolerance,
             backgroundTextureOpacity = textureOpacity,
+            textColorMode = textColorMode,
             tracks = tracks,
             rawJson = root
         )
@@ -439,6 +443,7 @@ object AxsContainer {
         albumObj.put("background_texture_key_color", albumData.backgroundTextureKeyColor)
         albumObj.put("background_texture_tolerance", albumData.backgroundTextureTolerance)
         albumObj.put("background_texture_opacity", albumData.backgroundTextureOpacity)
+        albumObj.put("text_color_mode", albumData.textColorMode)
 
         root.put("album", albumObj)
 

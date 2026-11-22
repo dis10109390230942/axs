@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 19,
-    "identityHash": "c4aa65ec7d86c2b2e296d2d92f98c68d",
+    "identityHash": "7ce3b6ab1d0a208f323c11fa2181675e",
     "entities": [
       {
         "tableName": "tracks",
@@ -135,7 +135,7 @@
       },
       {
         "tableName": "albums",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `title` TEXT NOT NULL, `year` INTEGER, `description` TEXT, `coverFileName` TEXT, `backgroundTextureFileName` TEXT, `backgroundTextureScale` REAL NOT NULL, `backgroundTextureFit` TEXT NOT NULL, `backgroundTextureOffsetX` REAL NOT NULL, `backgroundTextureOffsetY` REAL NOT NULL, `backgroundTextureBlendMode` TEXT NOT NULL, `backgroundTextureKeyColor` INTEGER NOT NULL, `backgroundTextureTolerance` REAL NOT NULL, `backgroundTextureOpacity` REAL NOT NULL, `createdAt` INTEGER NOT NULL, `containerFileName` TEXT, `isContainerOwned` INTEGER NOT NULL, `isContainerOnly` INTEGER NOT NULL, `containerSyncState` TEXT, `containerManifestJson` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `title` TEXT NOT NULL, `year` INTEGER, `description` TEXT, `coverFileName` TEXT, `backgroundTextureFileName` TEXT, `backgroundTextureScale` REAL NOT NULL, `backgroundTextureFit` TEXT NOT NULL, `backgroundTextureOffsetX` REAL NOT NULL, `backgroundTextureOffsetY` REAL NOT NULL, `backgroundTextureBlendMode` TEXT NOT NULL, `backgroundTextureKeyColor` INTEGER NOT NULL, `backgroundTextureTolerance` REAL NOT NULL, `backgroundTextureOpacity` REAL NOT NULL, `textColorMode` TEXT NOT NULL, `createdAt` INTEGER NOT NULL, `containerFileName` TEXT, `isContainerOwned` INTEGER NOT NULL, `isContainerOnly` INTEGER NOT NULL, `containerSyncState` TEXT, `containerManifestJson` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -215,6 +215,12 @@
             "fieldPath": "backgroundTextureOpacity",
             "columnName": "backgroundTextureOpacity",
             "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "textColorMode",
+            "columnName": "textColorMode",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -732,7 +738,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c4aa65ec7d86c2b2e296d2d92f98c68d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7ce3b6ab1d0a208f323c11fa2181675e')"
     ]
   }
 }

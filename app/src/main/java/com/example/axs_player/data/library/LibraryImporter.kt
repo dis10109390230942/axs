@@ -168,6 +168,7 @@ class LibraryImporter(
                     jsonWriter.endArray()
                     jsonWriter.name("year").value(container.year ?: 0)
                     jsonWriter.name("description").value(container.description ?: "")
+                    jsonWriter.name("text_color_mode").value(container.textColorMode)
                     jsonWriter.endObject()
                     jsonWriter.name("tracks").beginArray()
                     container.tracks.forEach { track ->
@@ -210,6 +211,7 @@ class LibraryImporter(
                     backgroundTextureKeyColor = container.backgroundTextureKeyColor,
                     backgroundTextureTolerance = container.backgroundTextureTolerance,
                     backgroundTextureOpacity = container.backgroundTextureOpacity,
+                    textColorMode = container.textColorMode,
                     createdAt = existingAlbum?.createdAt ?: now,
                     containerFileName = safeContainerName,
                     isContainerOwned = true,
@@ -755,6 +757,7 @@ class LibraryImporter(
             backgroundTextureKeyColor = album.backgroundTextureKeyColor,
             backgroundTextureTolerance = album.backgroundTextureTolerance,
             backgroundTextureOpacity = album.backgroundTextureOpacity,
+            textColorMode = album.textColorMode,
             tracks = trackWriteDataList,
             preservedRawJson = null
         )

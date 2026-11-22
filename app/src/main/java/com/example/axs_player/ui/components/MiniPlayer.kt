@@ -24,7 +24,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
@@ -32,11 +31,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.graphics.Color
 import com.example.axs_player.R
 import com.example.axs_player.ui.theme.BackgroundGray
 import com.example.axs_player.ui.theme.ProgressAccent
 import com.example.axs_player.ui.theme.TextBlack
-import com.example.axs_player.ui.theme.TextMuted
 
 private val SWIPE_UP_THRESHOLD = 24.dp
 private val SWIPE_SKIP_THRESHOLD = 48.dp
@@ -114,7 +113,7 @@ fun MiniPlayer(
                 )
                 Text(
                     text = artists.orEmpty(),
-                    color = TextMuted,
+                    color = TextBlack.copy(alpha = 0.6f),
                     fontSize = 14.sp,
                     lineHeight = 17.sp,
                     fontWeight = FontWeight.Medium,
@@ -146,12 +145,12 @@ fun MiniPlayer(
                 ),
             contentAlignment = Alignment.Center
         ) {
-            Icon(
-                painter = painterResource(if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play),
-                contentDescription = if (isPlaying) "pause" else "play",
-                tint = TextBlack,
-                modifier = Modifier.size(28.dp)
-            )
+                Icon(
+                    painter = painterResource(if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play),
+                    contentDescription = if (isPlaying) "pause" else "play",
+                    tint = TextBlack,
+                    modifier = Modifier.size(28.dp)
+                )
         }
     }
 }

@@ -46,6 +46,9 @@ class AlbumViewModel(
 
     val album: StateFlow<AlbumDetails?> = dao.observeAlbum(albumId)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+    val textColorMode: StateFlow<String> = album
+        .map { it?.textColorMode ?: "black" }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), "black")
     val coverUri: StateFlow<Uri?> = album
         .map { images.coverUri(it?.coverFileName) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)

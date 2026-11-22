@@ -145,6 +145,12 @@ private val MIGRATION_18_19 = object : Migration(18, 19) {
     }
 }
 
+private val MIGRATION_19_20 = object : Migration(19, 20) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE albums ADD COLUMN textColorMode TEXT NOT NULL DEFAULT 'black'")
+    }
+}
+
 @Database(
     entities = [
         TrackEntity::class,
@@ -157,7 +163,7 @@ private val MIGRATION_18_19 = object : Migration(18, 19) {
         PlaylistItemEntity::class,
         PlayEventEntity::class
     ],
-    version = 19,
+    version = 20,
     exportSchema = true
 )
 abstract class LibraryDatabase : RoomDatabase() {
@@ -187,7 +193,8 @@ abstract class LibraryDatabase : RoomDatabase() {
                     MIGRATION_15_16,
                     MIGRATION_16_17,
                     MIGRATION_17_18,
-                    MIGRATION_18_19
+                    MIGRATION_18_19,
+                    MIGRATION_19_20
                 )
                 .build()
     }

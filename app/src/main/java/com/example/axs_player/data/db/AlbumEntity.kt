@@ -23,6 +23,7 @@ data class AlbumEntity(
     val backgroundTextureKeyColor: Int = -1,
     val backgroundTextureTolerance: Float = 32f,
     val backgroundTextureOpacity: Float = 1f,
+    val textColorMode: String = "black",
     val createdAt: Long,
     val containerFileName: String? = null,
     val isContainerOwned: Boolean = false,

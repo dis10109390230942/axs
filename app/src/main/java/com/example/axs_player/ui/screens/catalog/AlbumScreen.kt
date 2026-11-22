@@ -58,6 +58,8 @@ import com.example.axs_player.ui.components.rememberCoverColors
 import com.example.axs_player.ui.theme.BackgroundGray
 import com.example.axs_player.ui.theme.OldStandardTT
 import com.example.axs_player.ui.theme.TextBlack
+import com.example.axs_player.ui.theme.TextMuted
+import com.example.axs_player.ui.theme.TextWhite
 
 private val COVER_SIZE = 300.dp
 private val COVER_BORDER_WIDTH = 2.dp
@@ -80,9 +82,13 @@ fun AlbumScreen(
     val tracks by viewModel.tracks.collectAsStateWithLifecycle()
     val items by viewModel.items.collectAsStateWithLifecycle()
     val media by viewModel.media.collectAsStateWithLifecycle()
+    val textColorMode by viewModel.textColorMode.collectAsStateWithLifecycle()
     var selectedTrackId by remember { mutableStateOf<String?>(null) }
     val coverColors = rememberCoverColors(coverUri)
     val statusBarHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
+
+    val textColor = if (textColorMode == "white") TextWhite else TextBlack
+    val metaColor = textColor.copy(alpha = 0.7f)
 
     Box(Modifier.fillMaxSize().background(coverColors.background)) {
         val context = LocalContext.current
@@ -109,7 +115,7 @@ fun AlbumScreen(
     ) {
         album?.let { details ->
             item {
-                AlbumHeader(album = details, coverUri = coverUri, coverUris = coverUris, onEdit = onEdit, onOpenDescription = onOpenDescription, linkColor = coverColors.highlight)
+                AlbumHeader(album = details, coverUri = coverUri, coverUris = coverUris, onEdit = onEdit, onOpenDescription = onOpenDescription, linkColor = coverColors.highlight, textColor = textColor, metaColor = metaColor)
             }
         }
         items(items, key = { it.id }) { track ->
@@ -117,7 +123,8 @@ fun AlbumScreen(
                 track = track,
                 onClick = { viewModel.play(track.id) },
                 onMore = { selectedTrackId = track.id },
-                highlightColor = coverColors.highlight
+                highlightColor = coverColors.highlight,
+                textColor = textColor
             )
         }
         if (tracks.isNotEmpty()) {
@@ -139,7 +146,7 @@ fun AlbumScreen(
 }
 
 @Composable
-private fun AlbumHeader(album: AlbumDetails, coverUri: Uri?, coverUris: List<Uri>, onEdit: () -> Unit, onOpenDescription: () -> Unit, linkColor: androidx.compose.ui.graphics.Color) {
+private fun AlbumHeader(album: AlbumDetails, coverUri: Uri?, coverUris: List<Uri>, onEdit: () -> Unit, onOpenDescription: () -> Unit, linkColor: androidx.compose.ui.graphics.Color, textColor: Color, metaColor: Color) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -147,7 +154,7 @@ private fun AlbumHeader(album: AlbumDetails, coverUri: Uri?, coverUris: List<Uri
         album.artists?.takeIf { it.isNotBlank() }?.let {
             Text(
                 text = it,
-                color = TextBlack,
+                color = metaColor,
                 fontSize = RELEASE_META_FONT_SIZE,
                 fontFamily = OldStandardTT,
                 fontWeight = FontWeight.Bold,
@@ -162,14 +169,14 @@ private fun AlbumHeader(album: AlbumDetails, coverUri: Uri?, coverUris: List<Uri
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            ReleaseMeta(text = RELEASE_TYPE)
+            ReleaseMeta(text = RELEASE_TYPE, color = metaColor)
             if (album.isContainerOwned) {
-                ReleaseMeta(text = "•")
-                ReleaseMeta(text = "AXS")
+                ReleaseMeta(text = "•", color = metaColor)
+                ReleaseMeta(text = "AXS", color = metaColor)
             }
             album.year?.let {
-                ReleaseMeta(text = "•")
-                ReleaseMeta(text = it.toString())
+                ReleaseMeta(text = "•", color = metaColor)
+                ReleaseMeta(text = it.toString(), color = metaColor)
             }
         }
         Spacer(modifier = Modifier.height(11.dp))
@@ -197,7 +204,7 @@ private fun AlbumHeader(album: AlbumDetails, coverUri: Uri?, coverUris: List<Uri
             verticalArrangement = Arrangement.spacedBy(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            ReleaseTitle(title = album.title)
+            ReleaseTitle(title = album.title, color = textColor)
             album.description?.takeIf { it.isNotBlank() }?.let {
                 Box(
                     modifier = Modifier
@@ -210,7 +217,7 @@ private fun AlbumHeader(album: AlbumDetails, coverUri: Uri?, coverUris: List<Uri
                 ) {
                     MarkdownText(
                         text = it,
-                        color = TextBlack,
+                        color = textColor,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
                         linkColor = linkColor,

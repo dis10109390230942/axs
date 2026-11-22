@@ -47,6 +47,7 @@ import com.example.axs_player.ui.components.TrackItem
 import com.example.axs_player.ui.components.TrackItemData
 import com.example.axs_player.ui.components.trackDisplayTitle
 import com.example.axs_player.ui.theme.TextBlack
+import com.example.axs_player.ui.components.contrastColor
 
 private val SWIPE_CLOSE_THRESHOLD = 120.dp
 private val AUTO_SCROLL_EDGE = 60.dp
@@ -124,7 +125,7 @@ fun QueuePanel(
     ) {
         Text(
             text = "queue",
-            color = TextBlack,
+            color = backgroundColor.contrastColor(),
             fontSize = 16.sp,
             fontWeight = FontWeight.Medium,
             modifier = Modifier.padding(start = 10.dp, end = 10.dp, bottom = 10.dp)

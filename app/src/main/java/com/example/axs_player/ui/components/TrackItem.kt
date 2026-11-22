@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.annotation.DrawableRes
 import com.example.axs_player.R
+import com.example.axs_player.ui.components.contrastColor
 import com.example.axs_player.ui.theme.BackgroundGray
 import com.example.axs_player.ui.theme.TextBlack
 import com.example.axs_player.ui.theme.TextMuted
@@ -65,12 +66,16 @@ fun TrackItem(
     modifier: Modifier = Modifier,
     showMore: Boolean = true,
     onMore: (() -> Unit)? = null,
-    highlightColor: Color = TrackActiveBackground
+    highlightColor: Color = TrackActiveBackground,
+    backgroundColor: Color = Color.Transparent,
+    textColor: Color? = null
 ) {
     TrackItemContent(
         modifier = modifier,
         isPlaying = track.isPlaying,
         highlightColor = highlightColor,
+        backgroundColor = backgroundColor,
+        textColor = textColor,
         onClick = onClick,
         variant = TrackItemVariant.LIBRARY,
         title = track.title,
@@ -90,12 +95,16 @@ fun TrackItem(
     modifier: Modifier = Modifier,
     @DrawableRes trailingIcon: Int? = R.drawable.ic_more_vertical,
     onMore: (() -> Unit)? = null,
-    highlightColor: Color = TrackActiveBackground
+    highlightColor: Color = TrackActiveBackground,
+    backgroundColor: Color = Color.Transparent,
+    textColor: Color? = null
 ) {
     TrackItemContent(
         modifier = modifier,
         isPlaying = track.isPlaying,
         highlightColor = highlightColor,
+        backgroundColor = backgroundColor,
+        textColor = textColor,
         onClick = onClick,
         variant = TrackItemVariant.RELEASE,
         title = trackDisplayTitle(track.title, track.subtitle),
@@ -113,6 +122,8 @@ private fun TrackItemContent(
     modifier: Modifier,
     isPlaying: Boolean,
     highlightColor: Color,
+    backgroundColor: Color,
+    textColor: Color?,
     onClick: () -> Unit,
     variant: TrackItemVariant,
     title: String,
@@ -123,6 +134,7 @@ private fun TrackItemContent(
     @DrawableRes trailingIcon: Int?,
     onMore: (() -> Unit)?
 ) {
+    val resolvedTextColor = textColor ?: backgroundColor.contrastColor()
     if (variant == TrackItemVariant.RELEASE) {
         Row(
             modifier = modifier
@@ -134,11 +146,11 @@ private fun TrackItemContent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Row(modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
-                Text(text = number?.toString().orEmpty(), color = TextBlack, fontSize = 16.sp, fontWeight = FontWeight.Medium, maxLines = 1, modifier = Modifier.width(NUMBER_WIDTH))
-                Text(text = "«$title»", color = TextBlack, fontSize = 16.sp, fontStyle = FontStyle.Italic, fontWeight = FontWeight.Medium, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f, fill = false))
-                if (hasVideo) Icon(painter = painterResource(R.drawable.ic_clip), contentDescription = null, tint = TextBlack, modifier = Modifier.padding(start = 4.dp).size(20.dp))
+                Text(text = number?.toString().orEmpty(), color = resolvedTextColor, fontSize = 16.sp, fontWeight = FontWeight.Medium, maxLines = 1, modifier = Modifier.width(NUMBER_WIDTH))
+                Text(text = "«$title»", color = resolvedTextColor, fontSize = 16.sp, fontStyle = FontStyle.Italic, fontWeight = FontWeight.Medium, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f, fill = false))
+                if (hasVideo) Icon(painter = painterResource(R.drawable.ic_clip), contentDescription = null, tint = resolvedTextColor, modifier = Modifier.padding(start = 4.dp).size(20.dp))
             }
-            trailingIcon?.let { Icon(painter = painterResource(it), contentDescription = null, tint = TextBlack, modifier = if (onMore != null) Modifier.clickable(onClick = onMore) else Modifier) }
+            trailingIcon?.let { Icon(painter = painterResource(it), contentDescription = null, tint = resolvedTextColor, modifier = if (onMore != null) Modifier.clickable(onClick = onMore) else Modifier) }
         }
         return
     }
@@ -168,7 +180,7 @@ private fun TrackItemContent(
         ) {
             Text(
                 text = "«$title»",
-                color = TextBlack,
+                color = resolvedTextColor,
                 fontSize = 14.sp,
                 fontStyle = FontStyle.Italic,
                 fontWeight = FontWeight.Medium,
@@ -184,7 +196,7 @@ private fun TrackItemContent(
                     visibleArtists?.let {
                         Text(
                             text = it,
-                            color = TextMuted,
+                            color = resolvedTextColor.copy(alpha = 0.7f),
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Medium,
                             maxLines = 1,
@@ -196,7 +208,7 @@ private fun TrackItemContent(
                         Icon(
                             painter = painterResource(R.drawable.ic_clip),
                             contentDescription = null,
-                            tint = TextMuted,
+                            tint = resolvedTextColor.copy(alpha = 0.7f),
                             modifier = Modifier.size(18.dp)
                         )
                     }
@@ -207,7 +219,7 @@ private fun TrackItemContent(
             Icon(
                 painter = painterResource(trailingIcon),
                 contentDescription = null,
-                tint = TextBlack,
+                tint = resolvedTextColor,
                 modifier = Modifier
                     .size(if (trailingIcon == R.drawable.ic_more) 24.dp else 24.dp)
                     .then(if (onMore != null) Modifier.clickable(onClick = onMore) else Modifier)

@@ -172,7 +172,8 @@ class PlayerViewModel(
             albumTextureScale = source.texture?.scale ?: 1f,
             albumTextureOffsetX = source.texture?.offsetX ?: 0f,
             albumTextureOffsetY = source.texture?.offsetY ?: 0f,
-            albumTextureOpacity = source.texture?.opacity ?: 1f
+            albumTextureOpacity = source.texture?.opacity ?: 1f,
+            textColorMode = source.albums.firstOrNull()?.textColorMode ?: "black"
         )
     }
 

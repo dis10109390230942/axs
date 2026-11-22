@@ -20,5 +20,6 @@ data class TrackInfo(
     val albumTextureScale: Float = 1f,
     val albumTextureOffsetX: Float = 0f,
     val albumTextureOffsetY: Float = 0f,
-    val albumTextureOpacity: Float = 1f
+    val albumTextureOpacity: Float = 1f,
+    val textColorMode: String = "black"
 )

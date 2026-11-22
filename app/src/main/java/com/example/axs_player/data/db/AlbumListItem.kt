@@ -8,5 +8,6 @@ data class AlbumListItem(
     val coverFileName: String?,
     val isContainerOwned: Boolean = false,
     val isContainerOnly: Boolean = false,
-    val containerFileName: String? = null
+    val containerFileName: String? = null,
+    val textColorMode: String = "black"
 )

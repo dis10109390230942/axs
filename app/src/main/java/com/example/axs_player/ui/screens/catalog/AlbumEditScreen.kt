@@ -69,6 +69,7 @@ import com.example.axs_player.ui.theme.BackgroundGray
 import com.example.axs_player.ui.theme.PageBackground
 import com.example.axs_player.ui.theme.TextBlack
 import com.example.axs_player.ui.theme.TextMuted
+import com.example.axs_player.ui.theme.TextWhite
 
 @Composable
 fun AlbumEditScreen(onSaved: () -> Unit, onEditDescription: () -> Unit, onEditTexture: () -> Unit, modifier: Modifier = Modifier, viewModel: AlbumEditViewModel = viewModel(factory = AlbumEditViewModel.Factory)) {
@@ -107,6 +108,10 @@ fun AlbumEditScreen(onSaved: () -> Unit, onEditDescription: () -> Unit, onEditTe
             }
             Spacer(Modifier.height(20.dp))
             TextButton(onClick = onEditTexture, modifier = Modifier.fillMaxWidth()) { Text("background texture settings", color = TextBlack) }
+            Spacer(Modifier.height(20.dp))
+            SectionTitle("text color")
+            Spacer(Modifier.height(10.dp))
+            TextColorModeSelector(currentMode = album?.textColorMode ?: "black", onChange = viewModel::setTextColorMode)
             Spacer(Modifier.height(20.dp))
             SectionTitle("description")
             Spacer(Modifier.height(10.dp))
@@ -248,4 +253,29 @@ private fun TexturePreview(uri: Uri?, scale: Float, offsetX: Float, offsetY: Flo
 @Composable
 private fun AddCoverBox(onClick: () -> Unit) {
     Text("+", fontSize = 28.sp, color = TextBlack, modifier = Modifier.size(180.dp).border(2.dp, BackgroundGray).clickable(onClick = onClick, indication = null, interactionSource = remember { MutableInteractionSource() }).padding(70.dp))
+}
+
+@Composable
+private fun TextColorModeSelector(currentMode: String, onChange: (String) -> Unit) {
+    var expanded by remember { mutableStateOf(false) }
+    val options = listOf("black" to "Black", "white" to "White")
+    Box(modifier = Modifier.fillMaxWidth()) {
+        TextButton(
+            onClick = { expanded = !expanded },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(options.first { it.first == currentMode }.second, color = TextBlack)
+        }
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            options.forEach { (mode, label) ->
+                DropdownMenuItem(
+                    text = { Text(label, color = if (mode == currentMode) TextBlack else TextMuted) },
+                    onClick = { onChange(mode); expanded = false }
+                )
+            }
+        }
+    }
 }
